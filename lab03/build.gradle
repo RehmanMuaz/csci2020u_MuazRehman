@@ -1,0 +1,33 @@
+apply plugin: 'java'
+sourceCompatibility = 13
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.apache.commons:commons-csv:1.4")
+}
+
+buildscript {
+    repositories {
+        flatDir dirs: '../proguard6.2.2/lib'
+    }
+
+    dependencies {
+        classpath ':proguard'
+    }
+}
+
+task(run, dependsOn: 'classes', type: JavaExec) {
+    main = 'lab03.CSVDemo'
+	
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task(minify, dependsOn: 'jar', type: proguard.gradle.ProGuardTask) {
+    configuration 'proguard.cfg'
+    injars 'build/libs/lab03-1.0.jar'
+    outjars 'build/libs/lab03.min.jar'
+}
